@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Streaming</title>
     <link rel="icon" type="image/x-icon" href="/favicon.webp">  
     <meta name="robots" content="nofollow, noindex, max-snippet:-1, max-video-preview:-1, max-image-preview:large"/>
     <style>
@@ -26,10 +28,16 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
+        .iframe-container {
+            width: 100%;
+            height: calc(100% - 60px);
+            position: relative;
+        }
+
         iframe {
             border: none;
             width: 100%;
-            height: calc(100% - 60px);
+            height: 100%;
         }
 
         .ad-container {
@@ -45,6 +53,7 @@
             position: absolute;
             bottom: 0;
             width: 100%;
+            display: none; /* Hidden as it's not necessary with iframe */
         }
 
         .info-box {
@@ -58,6 +67,7 @@
             backdrop-filter: blur(5px);
             border: 1px solid #ff9966;
             box-shadow: 0 0 15px rgba(255, 153, 102, 0.3);
+            z-index: 100;
         }
 
         .info-box h3 {
@@ -82,21 +92,79 @@
             cursor: pointer;
         }
 
-        @media (max-width: 768px) {
+        /* Mobile-specific styles */
+        @media screen and (max-width: 768px) {
+            .header {
+                padding: 12px;
+                font-size: 18px;
+            }
+            
+            .iframe-container {
+                height: calc(100% - 54px);
+            }
+            
             .info-box {
-                position: relative;
-                top: 0;
-                right: 0;
-                max-width: 100%;
-                margin: 10px;
+                position: fixed;
+                top: auto;
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                margin: 0;
+                padding: 12px;
+                font-size: 12px;
+            }
+            
+            .info-box h3 {
+                font-size: 16px;
+            }
+            
+            .mobile-info-toggle {
+                display: block;
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: #ff9966;
+                color: white;
+                border: none;
+                font-size: 20px;
+                z-index: 101;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            }
+            
+            .info-box.hidden {
+                display: none;
+            }
+        }
+
+        /* Desktop-specific styles */
+        @media screen and (min-width: 769px) {
+            .mobile-info-toggle {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
- 
-    <iframe src="https://123moviesgot.pages.dev/" allowfullscreen></iframe>
+    <div class="header">
+        Movie Streaming
+    </div>
+    
+    <div class="iframe-container">
+        <iframe src="https://123moviesgot.pages.dev/" allowfullscreen></iframe>
+    </div>
 
+    <button class="mobile-info-toggle" id="infoToggle">i</button>
+
+    <div class="info-box" id="infoBox">
+        <button class="close-info" onclick="toggleInfoBox()">×</button>
+        <h3>Streaming Info</h3>
+        <p>Enjoy your favorite movies and shows in high quality. Bookmark this site for easy access.</p>
+        <p>Note: This is a demonstration site for educational purposes.</p>
+    </div>
 
     <div class="ad-container" id="ad-container-300x250">
         <button class="ad-close-btn" onclick="closeAd('ad-container-300x250')">×</button>
@@ -126,9 +194,6 @@
         <script type="text/javascript" src="//wagejustifieddoze.com/727ebd65ae992c7e803c7b8a6f6c8cb4/invoke.js"></script>
     </div>
 
-   
-
-
     <script>
         function closeAd(adId) {
             const ad = document.getElementById(adId);
@@ -136,6 +201,31 @@
                 ad.style.display = 'none';
             }
         }
+        
+        // Toggle info box on mobile
+        function toggleInfoBox() {
+            const infoBox = document.getElementById('infoBox');
+            infoBox.classList.toggle('hidden');
+        }
+        
+        // Initialize based on device
+        function initLayout() {
+            const isMobile = window.innerWidth <= 768;
+            const infoBox = document.getElementById('infoBox');
+            
+            if (isMobile) {
+                infoBox.classList.add('hidden');
+            } else {
+                infoBox.classList.remove('hidden');
+            }
+        }
+        
+        // Add event listeners
+        document.getElementById('infoToggle').addEventListener('click', toggleInfoBox);
+        
+        // Initialize on load and resize
+        window.addEventListener('load', initLayout);
+        window.addEventListener('resize', initLayout);
     </script>
 </body>
 </html>
